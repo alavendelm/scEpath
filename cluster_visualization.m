@@ -1,4 +1,4 @@
-function cluster_visualization(ydata, group,class_labels, true_labs, marker_size,colorCell,fig_width,fig_height)
+function cluster_visualization(ydata,group,class_labels,true_labs,marker_size,colorCell,fig_width,fig_height,folder)
 % display cell lineage hierarchy
 % Inputs:
 %   ydata : m x 2, 2-D coordindates from dimension reduction
@@ -71,7 +71,7 @@ else
     xlabel('Component 1','FontName','Arial','FontSize',10);
     ylabel('Component 2','FontName','Arial','FontSize',10);
 end
-folderName = fullfile('results','figures');
+folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end

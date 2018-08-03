@@ -1,4 +1,4 @@
-function networkIfo = constructingNetwork(data,quick_construct,thresh,thresh_percent,showFigure,fig_width,fig_height)
+function networkIfo = constructingNetwork(data,quick_construct,thresh,thresh_percent,showFigure,fig_width,fig_height,folder)
 % construct a gene-gene co-expression network
 % Inputs:
 %    data: single cell data (rows are cells and columns are genes)
@@ -78,7 +78,7 @@ if showFigure
     box on
     grid on
         
-    folderName = fullfile('results','figures');
+    folderName = fullfile(folder,'figures');
     if ~exist(folderName, 'dir')
         mkdir(folderName);
     end

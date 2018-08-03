@@ -1,4 +1,4 @@
-function lineage_visualization(lineageIfo,class_labels,node_size,colorCell,showLoops,fig_width)
+function lineage_visualization(lineageIfo,class_labels,node_size,colorCell,showLoops,fig_width,folder)
 % display cell lineage hierarchy
 % Inputs: 
 %   lineageIfo : a struct giving the cell lineage information (returned from the function inferingLineage.m)
@@ -40,7 +40,7 @@ yd = get(h, 'YData');
 text(xd-0.4, yd, class_labels, 'FontSize',10, 'FontWeight','bold','Interpreter','none', 'HorizontalAlignment','left', 'VerticalAlignment','middle')
 axis off
 set(gcf,'color','w');
-folderName = fullfile('results','figures');
+folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end

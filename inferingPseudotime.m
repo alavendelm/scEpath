@@ -1,4 +1,4 @@
-function pseudotimeIfo = inferingPseudotime(Rscript,ydata,lineageIfo,clusterIfo,theta)
+function pseudotimeIfo = inferingPseudotime(Rscript,ydata,lineageIfo,clusterIfo,theta,folder)
 % reconstruct the pseudotime
 % Inputs:
 %   Rscript : path for Rscript
@@ -30,7 +30,7 @@ for i = 1:numCluster
     outCell{i} = idxCluster{i}(d > thresh);
 end
 
-filefolder = fullfile('results','temporalfiles');
+filefolder = fullfile(folder,'_tempfiles');
 if ~exist(fullfile(pwd,filefolder),'dir')
     mkdir(filefolder)
 end
@@ -49,8 +49,9 @@ for j = 1:length(path)
     dlmwrite(fullfile(filefolder,'ydata.txt'),ydataFpathj,'delimiter','\t','precision','%.4f');
     dlmwrite(fullfile(filefolder,'ydataOutCell.txt'),ydataFOutCellpathj,'delimiter','\t','precision','%.4f');
     dlmwrite(fullfile(filefolder,'pathLength.txt'),length(path{j}),'delimiter','\t');
+    
     % Calling R's principal curve
-    eval([' system([', '''', Rscript, ' principal_curve_fitting.R ', '''', ' filefolder]);']);
+    eval([' system([', '''', Rscript, ' /Users/Adam/Soft/github/scEpath/principal_curve_fitting.R ', '''', ' filefolder]);']);
     try
         pseudotimeMainCell = importdata(fullfile(filefolder,'PcurveLambdaMainCell.txt'));
         projectionsPcurveMaincell = importdata(fullfile(filefolder,'PcurveProjectionValueMainCell.txt'));

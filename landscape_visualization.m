@@ -1,4 +1,4 @@
-function landscape_visualization(scEcell,ydata,clusterIfo,colorCell,nlevels, viewpoint1,viewpoint2,fig_width, fig_height)
+function landscape_visualization(scEcell,ydata,clusterIfo,colorCell,nlevels,viewpoint1,viewpoint2,fig_width,fig_height,folder)
 % display energy landscape in 2-D contour plot and 3-D surface
 % Inputs:
 %   scEcell : m x 1 vector, single cell energy
@@ -101,7 +101,7 @@ ylabel('Component 2','FontSize',10,'FontName','Arial')
 title('Contour plot','FontSize',10,'FontName','Arial')
 view(viewpoint1)
 
-folderName = fullfile('results','figures');
+folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
@@ -136,7 +136,7 @@ camlight right
 lighting phong
 axis([min(ydataCenter(:,1))-5,max(ydataCenter(:,1))+5, min(ydataCenter(:,2))-5, max(ydataCenter(:,2))+5, -0.05, 1])
 
-folderName = fullfile('results','figures');
+folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end

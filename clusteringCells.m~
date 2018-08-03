@@ -32,7 +32,7 @@ if isempty(C)
         [y, S] = SIMLR(data',c,10);
         K1 = EstimateNumberClusters(abs(S), clusterRange,0);
         if isequal(K1,c)
-            K1 = EstimateNumberClusters(abs(S),clusterRange,1,folder);
+            K1 = EstimateNumberClusters(abs(S),clusterRange,1);
             break;
         end
     end
@@ -66,7 +66,7 @@ if showFigure
 end
 
 
-function [K1, K12,eigengap] = EstimateNumberClusters(W,NUMC,showFigure,folder)
+function [K1, K12,eigengap] = EstimateNumberClusters(W, NUMC,showFigure)
 %%%This function estimates the number of clusters using eigengap
 
 %W is the similarity graph
@@ -122,7 +122,7 @@ if showFigure
     xlabel('Number of clusters','FontName','Arial','FontSize',10)
     ylabel('Eigengap','FontName','Arial','FontSize',10)
     set(gca,'Xtick',NUMC)
-    folderName = fullfile(folder,'figures');
+    folderName = fullfile(resfolder,'figures');
     if ~exist(folderName, 'dir')
         mkdir(folderName);
     end

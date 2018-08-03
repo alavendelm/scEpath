@@ -1,4 +1,4 @@
-function scEnergy_comparison_visualization(scEcell,clusterIfo,class_labels,colorCell,show_pvalue)
+function scEnergy_comparison_visualization(scEcell,clusterIfo,class_labels,colorCell,show_pvalue,folder)
 % display cell lineage hierarchy
 % Inputs:
 %   scEcell : m x 1 vector, single cell energy
@@ -36,7 +36,7 @@ if show_pvalue
         end
     end
 end
-folderName = fullfile('results','figures');
+folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
