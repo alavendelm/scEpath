@@ -2,10 +2,12 @@ function scEpath_demo
 % This is a demo showing how to running scEpath using mouse lung epithelial specification single cell RNA-seq data (LES data)
 % This demo can reproduce all the figures when analyzing LES data in our paper
 % clear the folder
+
 clc;clear;
-if exist('results', 'dir')
-    rmdir('results','s')
-end
+% if exist('results', 'dir')
+%     rmdir('results','s')
+% end
+
 addpath(genpath('./'))
 
 %%%% running the first several steps of scEpath to calculate the single cell energy and transition probabilities, and infer cell lineages and pseudotime
@@ -18,7 +20,7 @@ iniData = importdata(fullfile('example_data','GSE52583_LESdata.mat'));
 
 %% step 2: do preprocessing
 minCells = 3; minGenes = 100; logNormalize = 1; filterRibo = 1; % default parameters for QC (see functions for details):
-proData = preprocessing(iniData,minCells, minGenes,logNormalize,filterRibo)
+proData = preprocessing(iniData,minCells, minGenes,logNormalize,filterRibo);
 %   proData: a struct variable (store the data after QC) contains the same fields with iniData
 
 %% step 3: construct a gene-gene co-expression network
@@ -36,7 +38,8 @@ networkIfo = constructingNetwork(proData.data',quick_construct,tau); % a struct 
 % scEcell; scEnergy of each cell
 % perform principal component analysis of the energy matrix scE
 ydata = ECA(scE);% ydata : m x nPC, nPC-D coordindates from dimension reduction
-ydata = ydata(:,1:2); % In this demo, only the first two significant components are used. 
+ydata = ydata(:,1:2); % In this demo, only the first two significant components are used.
+
 
 %% step 5: perform unsupervised clustering of single cell data
 C = []; % set C to be empty if one would like to determine the number of clusters by eigengap; otherwise please provide the number of desired clusters
