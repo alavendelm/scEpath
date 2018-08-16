@@ -44,4 +44,4 @@ folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
-saveas(gcf,fullfile(folderName,'inferred_lineage.pdf'))
+saveas(gcf,fullfile(folderName,'Clusters_lineage.pdf'))

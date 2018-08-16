@@ -27,14 +27,19 @@ if exist('true_labs', 'var') & ~isempty(true_labs)
     end
 end
 if ~exist('fig_width', 'var') || isempty(fig_width)
-    fig_width = 600;
+    fig_width = 500;
 end
 if ~exist('fig_height', 'var') || isempty(fig_height)
-    fig_height = 250;
+    fig_height = 500;
 end
 
 figure('position', [600, 200, fig_width, fig_height])
 
+fig = gcf;
+fig.PaperPositionMode = 'auto';
+fig_pos = fig.PaperPosition;
+fig.PaperSize = [fig_pos(3) fig_pos(4)];
+    
 if ~exist('true_labs', 'var') || isempty(true_labs)
     numCluster = length(unique(group));
     h = zeros(1,numCluster);
@@ -42,20 +47,23 @@ if ~exist('true_labs', 'var') || isempty(true_labs)
         hold on
         h(i) = scatter(ydata(group==i,1),ydata(group==i,2),marker_size(group==i),colorCell(i,:),'filled');
     end
+    alpha(0.7)
     legend(h,class_labels,'Location','best')
     set(gca,'Xtick',[]);set(gca,'Ytick',[])
+    set(gca,'XColor','none'); set(gca,'YColor','none');
     axis tight;box off
     set(gcf,'color','w');
-    xlabel('Component 1','FontName','Arial','FontSize',10);
-    ylabel('Component 2','FontName','Arial','FontSize',10);
+    %xlabel('Component 1','FontName','Arial','FontSize',10);
+    %ylabel('Component 2','FontName','Arial','FontSize',10);
 else
     subplot(1,2,1); gscatter(ydata(:,1),ydata(:,2),true_labs,colorCell2);
     alpha(0.5)
     set(gca,'Xtick',[]);set(gca,'Ytick',[])
+    set(gca,'XColor','none'); set(gca,'YColor','none');
     axis tight;box off
     set(gcf,'color','w');
-    xlabel('Component 1','FontName','Arial','FontSize',10);
-    ylabel('Component 2','FontName','Arial','FontSize',10);
+    %xlabel('Component 1','FontName','Arial','FontSize',10);
+    %ylabel('Component 2','FontName','Arial','FontSize',10);
     subplot(1,2,2);
     numCluster = length(unique(group));
     class_labels = cell(1,numCluster);h = zeros(1,numCluster);
@@ -65,14 +73,11 @@ else
         class_labels{i} = ['C' num2str(i)];
     end
     legend(h,class_labels,'Location','best')
-    set(gca,'Xtick',[]);set(gca,'Ytick',[])
-    axis tight;box off
-    set(gcf,'color','w');
-    xlabel('Component 1','FontName','Arial','FontSize',10);
-    ylabel('Component 2','FontName','Arial','FontSize',10);
+    axis tight;box off   
 end
+
 folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
-saveas(gcf,fullfile(folderName,'cluster_2Dvisualization.pdf'))
+saveas(gcf,fullfile(folderName,'Clusters_2Dvis.pdf'))

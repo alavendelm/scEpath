@@ -82,7 +82,7 @@ if showFigure
     if ~exist(folderName, 'dir')
         mkdir(folderName);
     end
-    saveas(hFig,fullfile(folderName,'topological_metrics_gene_network.pdf'))
+    saveas(hFig,fullfile(folderName,'Topological_network_metrics.pdf'))
     
 end
 

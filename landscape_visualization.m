@@ -105,7 +105,7 @@ folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
-saveas(hFig,fullfile(folderName,'contour_plot_energy_landscape.pdf'))
+saveas(hFig,fullfile(folderName,'Landscape_2D_contour.pdf'))
 
 
 hFig2 = figure('position', [600, 200, fig_width, fig_height]);
@@ -141,6 +141,6 @@ if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
 % saveas(hFig2,fullfile(folderName,'3D_energy_landscape.pdf'))
-print(fullfile(folderName,'3D_energy_landscape'),'-depsc','-tiff','-r300')
+print(fullfile(folderName,'Landscape_3D_energy'),'-depsc','-tiff','-r300')
 
 

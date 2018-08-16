@@ -8,8 +8,8 @@ function colors = acolors(Num_cluster)
         c4 = hex2rgb('#77AC30');
         c5 = hex2rgb('#4DBEEE');
         c6 = hex2rgb('#A2142F');
-        c7 = hex2rgb('#DC143C');
-        c8 = hex2rgb('#282828');
+        c7 = hex2rgb('#969980');
+        c8 = hex2rgb('#AF7984');
         c9 = hex2rgb('#AA9739');
         colors = [c1;c2;c3;c4;c5;c6;c7;c8;c9];
     else

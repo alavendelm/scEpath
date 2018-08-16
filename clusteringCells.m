@@ -62,7 +62,7 @@ if showFigure
     if ~exist(folderName, 'dir')
         mkdir(folderName);
     end
-    saveas(hFig2,fullfile(folderName,'cell_similarity_matrix.pdf'))
+    saveas(hFig2,fullfile(folderName,'Cell_similarity_matrix.pdf'))
 end
 
 

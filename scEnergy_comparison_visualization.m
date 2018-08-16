@@ -40,4 +40,4 @@ folderName = fullfile(folder,'figures');
 if ~exist(folderName, 'dir')
     mkdir(folderName);
 end
-saveas(gcf,fullfile(folderName,'scEnergy_comparison.pdf'))
+saveas(gcf,fullfile(folderName,'scEnergies.pdf'))
