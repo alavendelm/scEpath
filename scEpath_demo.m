@@ -30,7 +30,7 @@ proData = preprocessing(iniData,minCells, minGenes,logNormalize,filterRibo);
 % if one would like to quickly construct a network using a given threshold,then set quick_construct = 1 and give a tau (e.g.0.4);
 % quick_construct = 0; tau = [];
 quick_construct = 1; tau = 0.4;
-networkIfo = constructingNetwork(proData.data',quick_construct,tau,resfolder); % a struct variable
+networkIfo = constructingNetwork(proData.data',quick_construct,tau,[],[],[],[],resfolder); % a struct variable
 % networkIfo.R: adjacency matrix (upper matrix) of the constructed network
 % networkIfo.IDselect: the index of selected genes in the constructed network
 
@@ -45,7 +45,7 @@ ydata = ydata(:,1:2); % In this demo, only the first two significant components 
 
 %% step 5: perform unsupervised clustering of single cell data
 C = []; % set C to be empty if one would like to determine the number of clusters by eigengap; otherwise please provide the number of desired clusters
-y = clusteringCells(proData.data,networkIfo,C,resfolder); % the cluster label of each cell
+y = clusteringCells(proData.data,networkIfo,C,[],[],resfolder); % the cluster label of each cell
 
 clusterIfo = addClusterInfo(y);% user can also add external clustering results here. y can be either a numerical or cell array.
 % clusterIfo.identity: the updated cluster label of each cell
@@ -55,7 +55,7 @@ numCluster = length(unique(clusterIfo.identity));
 
 %% step 6: infer the cell lineage hierarchy
 alpha = 0.01; theta1 = 0.8; % default parameters (see functions for details):
-lineageIfo = inferingLineage(scEcell,ydata,clusterIfo,rootNode,alpha,theta1,resfolder);
+lineageIfo = inferingLineage(scEcell,ydata,clusterIfo,rootNode,alpha,theta1);
 % lineageIfo.TP: transition probability TP
 % lineageIfo.MDST: minimal directed spanning tree, i.e.,the inferred lineage
 % lineageIfo.path: the node in each path
@@ -66,7 +66,7 @@ lineageIfo = inferingLineage(scEcell,ydata,clusterIfo,rootNode,alpha,theta1,resf
 % Replace the following line by the appropriate path for Rscript
 % Rscript = '"C:\Program Files\R\R-3.4.0\bin\Rscript"'; % for 64-bit windows
 Rscript = '"/usr/local/bin/Rscript"'; % for Mac OS
-pseudotimeIfo = inferingPseudotime(Rscript,ydata,lineageIfo,clusterIfo);
+pseudotimeIfo = inferingPseudotime(Rscript,ydata,lineageIfo,clusterIfo,[],resfolder);
 % pseudotimeIfo.pseudotime: a cell array, each cell gives pseudotime value for each path
 % pseudotimeIfo.cellOrder: a cell array, each cell gives cell order for each path
 % pseudotimeIfo.cellIndex: a cell array, each cell gives cell index in each path
@@ -93,11 +93,11 @@ showLoops = 1; fig_width = 200;
 lineage_visualization(lineageIfo,class_labels,node_size,colorCell,showLoops,fig_width,resfolder)
 
 % comparison of scEnergy among different clusters using boxplot
-scEnergy_comparison_visualization(scEcell,clusterIfo,class_labels,colorCell,resfolder)
+scEnergy_comparison_visualization(scEcell,clusterIfo,class_labels,colorCell,[],resfolder)
 
 % display energy landscape in 2-D contour plot and 3-D surface
 nlevels = 8; % contour levels in the contour plot
-landscape_visualization(scEcell,ydata,clusterIfo,colorCell,nlevels,resfolder)
+landscape_visualization(scEcell,ydata,clusterIfo,colorCell,nlevels,[],[],[],[],resfolder)
 
 %%%% running other steps of scEpath to perform downstream analyses,
 %%%% including gene temporal dynamics along pseudotime, identification of pseudotime dependent genes,
