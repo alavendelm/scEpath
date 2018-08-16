@@ -2,15 +2,15 @@ function scEpath_demo
 % This is a demo showing how to running scEpath using mouse lung epithelial specification single cell RNA-seq data (LES data)
 % This demo can reproduce all the figures when analyzing LES data in our paper
 % clear the folder
+addpath(genpath('./'))
 
 clc;clear;
- if exist('results', 'dir')
-     rmdir('results','s')
-     mkdir('results')
- end
+%  if exist('results', 'dir')
+%      rmdir('results','s')
+%      mkdir('results')
+%  end
 
-folder = 'results';
-addpath(genpath('./'))
+resfolder = 'results';
 
 %%%% running the first several steps of scEpath to calculate the single cell energy and transition probabilities, and infer cell lineages and pseudotime
 %% step 1: load data and (if applicable) cell attributes (such as cell type, culture condition, day captured)
@@ -30,7 +30,7 @@ proData = preprocessing(iniData,minCells, minGenes,logNormalize,filterRibo);
 % if one would like to quickly construct a network using a given threshold,then set quick_construct = 1 and give a tau (e.g.0.4);
 % quick_construct = 0; tau = [];
 quick_construct = 1; tau = 0.4;
-networkIfo = constructingNetwork(proData.data',quick_construct,tau); % a struct variable
+networkIfo = constructingNetwork(proData.data',quick_construct,tau,resfolder); % a struct variable
 % networkIfo.R: adjacency matrix (upper matrix) of the constructed network
 % networkIfo.IDselect: the index of selected genes in the constructed network
 
@@ -45,17 +45,17 @@ ydata = ydata(:,1:2); % In this demo, only the first two significant components 
 
 %% step 5: perform unsupervised clustering of single cell data
 C = []; % set C to be empty if one would like to determine the number of clusters by eigengap; otherwise please provide the number of desired clusters
-y = clusteringCells(proData.data,networkIfo,C); % the cluster label of each cell
+y = clusteringCells(proData.data,networkIfo,C,resfolder); % the cluster label of each cell
 
 clusterIfo = addClusterInfo(y);% user can also add external clustering results here. y can be either a numerical or cell array.
 % clusterIfo.identity: the updated cluster label of each cell
 % clusterIfo.idxCluster: a cell array, each cell contains the index of cells belong to the each cluster
-rootNode = inferStart(clusterIfo.identity,scEcell)
+rootNode = inferStart(clusterIfo.identity,scEcell);
 numCluster = length(unique(clusterIfo.identity));
 
 %% step 6: infer the cell lineage hierarchy
 alpha = 0.01; theta1 = 0.8; % default parameters (see functions for details):
-lineageIfo = inferingLineage(scEcell,ydata,clusterIfo,rootNode,alpha,theta1);
+lineageIfo = inferingLineage(scEcell,ydata,clusterIfo,rootNode,alpha,theta1,resfolder);
 % lineageIfo.TP: transition probability TP
 % lineageIfo.MDST: minimal directed spanning tree, i.e.,the inferred lineage
 % lineageIfo.path: the node in each path
@@ -85,19 +85,19 @@ true_labs = categorical(true_labs);
 true_labs = reordercats(true_labs,{'E14.5','E16.5','E18.5','Adult'});
 marker_size = scEcell*50;  % the size of individual cell (dots), propotational to the scEnergy of each cell (by default)
 fig_width = 600;fig_height = 250;
-cluster_visualization(ydata, group,class_labels, true_labs, marker_size,colorCell,fig_width,fig_height)
+cluster_visualization(ydata, group,class_labels, true_labs, marker_size,colorCell,fig_width,fig_height,resfolder)
 
 % display cell lineage hierarchy with transition probability
 node_size = grpstats(full(scEcell),group,'median')*30; % the size of tree node, propotational to the median scEnergy of each cluster
 showLoops = 1; fig_width = 200;
-lineage_visualization(lineageIfo,class_labels,node_size,colorCell,showLoops,fig_width)
+lineage_visualization(lineageIfo,class_labels,node_size,colorCell,showLoops,fig_width,resfolder)
 
 % comparison of scEnergy among different clusters using boxplot
-scEnergy_comparison_visualization(scEcell,clusterIfo,class_labels,colorCell)
+scEnergy_comparison_visualization(scEcell,clusterIfo,class_labels,colorCell,resfolder)
 
 % display energy landscape in 2-D contour plot and 3-D surface
 nlevels = 8; % contour levels in the contour plot
-landscape_visualization(scEcell,ydata,clusterIfo,colorCell,nlevels)
+landscape_visualization(scEcell,ydata,clusterIfo,colorCell,nlevels,resfolder)
 
 %%%% running other steps of scEpath to perform downstream analyses,
 %%%% including gene temporal dynamics along pseudotime, identification of pseudotime dependent genes,
