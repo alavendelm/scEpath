@@ -1,7 +1,6 @@
 function colors = acolors(Num_cluster)
 
     if(Num_cluster < 10)
-        % nice colors
         c1 = hex2rgb('#D95319');
         c2 = hex2rgb('#EDB120');
         c3 = hex2rgb('#7E2F8E');
