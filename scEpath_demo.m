@@ -4,10 +4,12 @@ function scEpath_demo
 % clear the folder
 
 clc;clear;
-% if exist('results', 'dir')
-%     rmdir('results','s')
-% end
+ if exist('results', 'dir')
+     rmdir('results','s')
+     mkdir('results')
+ end
 
+folder = 'results';
 addpath(genpath('./'))
 
 %%%% running the first several steps of scEpath to calculate the single cell energy and transition probabilities, and infer cell lineages and pseudotime
@@ -100,51 +102,51 @@ landscape_visualization(scEcell,ydata,clusterIfo,colorCell,nlevels)
 %%%% running other steps of scEpath to perform downstream analyses,
 %%%% including gene temporal dynamics along pseudotime, identification of pseudotime dependent genes,
 %%%% creation of "rolling wave" and identification of key transcription factors responsible for cell fate decision
-%% downstream analysis
-% (1) calculating the smooth version of expression level based on pseudotime
-nbins = 10; % the number of bins for dividing the pseudotime
-smoothExprIfo = cell(1,length(pseudotimeIfo.pseudotime));
-for j = 1:length(pseudotimeIfo.pseudotime)
-    pseudotime = pseudotimeIfo.pseudotime{j};
-    cellOrder = pseudotimeIfo.cellOrder{j};
-    cellw = scEcell;
-    smoothExprIfo{j} = smootheningExpr(proData.data,pseudotime,cellOrder,nbins,cellw);
-end
-
-% (2) plot individual gene temporal dynamics along pseudotime
-my_genes = {'Cdk1','Sox11','Pdpn','Sftpc', 'Sftpb', 'Lyz2'};
-color_by = clusterIfo.identity; % color cells according to the cell attributes such as inferred cluster
-plot_genes_in_pseudotime(my_genes,proData,smoothExprIfo,pseudotimeIfo,lineageIfo,color_by,colorCell)
-
-% (3) identify pseudotime dependent genes
-% Note: results of the following analyses may be slightly different with the results presented in our paper because of the use of "random number generator" in identifying pseudotime dependent genes
-sd_thresh = 0.5; sig_thresh = 0.01;nboot = 1000; % default parameters (see functions for details). nboot can be changed to 500 or less
-PDGIfo = identify_pseudotime_dependent_genes(proData,smoothExprIfo,pseudotimeIfo,sd_thresh,sig_thresh,nboot);
-%   PDGIfo.PDG : a cell array, each cell contains the identified pseudotime-dependent genes for each path
-%   PDGIfo.allGenes: a cell array, each cell contains the genes with their calculated adjusted P-values and standard deviation
-
-% (4) create "rolling wave" showing the temporal pattern of pseudotime dependent genes and identify gene clusters showing similar pattern
-optimalK = 8; % the number of desired gene clusters
-pathUsed = 1; % order the pseudotime-dependent genes based on their peak expression in the "pathUsed" branch. e.g. pathUsed = 1
-PDGIfo = plot_rolling_wave(PDGIfo,smoothExprIfo,proData,optimalK,pathUsed);
-% PDGIfo: update the PDG information (see functions for details).
-
-% (5) identify key transcription factors responsible for cell fate decision
-% load TF information downloaded from AnimalTFDB 2.0 (http://bioinfo.life.hust.edu.cn/AnimalTFDB/)
-load TF_Ifo.mat
-TF = TF_Ifo.mouse.Symbol; % TF for mouse
-% TF = TF_Ifo.human.Symbol; % TF for mouse
-thresh_SD_TF = 0.5; thresh_FC_TF = 1; % default parameters (see functions for details):
-PDG_TFIfo = identify_keyTF(proData,PDGIfo.orderedPDG,smoothExprIfo,lineageIfo,clusterIfo,TF,thresh_SD_TF,thresh_FC_TF);
-% PDG_TFIfo.PDG_TFSig : key TFs that may be responsible for cell fate decisions
-% PDG_TFIfo.PDG_TF : all the TFs found in the pseudotime-dependent genes
-
-% (6) create "rolling wave" showing the temporal pattern of key transcription factors
-show_TF_names = 1; % to show the TF names as Yticklabels or not
-plot_rolling_wave_TF(PDG_TFIfo,PDGIfo,optimalK,show_TF_names)
-
-
-%% save all the variables in the workspace
-save(fullfile('results','resultsLESdata.mat'));
-
-
+% % %% downstream analysis
+% % % (1) calculating the smooth version of expression level based on pseudotime
+% % nbins = 10; % the number of bins for dividing the pseudotime
+% % smoothExprIfo = cell(1,length(pseudotimeIfo.pseudotime));
+% % for j = 1:length(pseudotimeIfo.pseudotime)
+% %     pseudotime = pseudotimeIfo.pseudotime{j};
+% %     cellOrder = pseudotimeIfo.cellOrder{j};
+% %     cellw = scEcell;
+% %     smoothExprIfo{j} = smootheningExpr(proData.data,pseudotime,cellOrder,nbins,cellw);
+% % end
+% % 
+% % % (2) plot individual gene temporal dynamics along pseudotime
+% % my_genes = {'Cdk1','Sox11','Pdpn','Sftpc', 'Sftpb', 'Lyz2'};
+% % color_by = clusterIfo.identity; % color cells according to the cell attributes such as inferred cluster
+% % plot_genes_in_pseudotime(my_genes,proData,smoothExprIfo,pseudotimeIfo,lineageIfo,color_by,colorCell)
+% % 
+% % % (3) identify pseudotime dependent genes
+% % % Note: results of the following analyses may be slightly different with the results presented in our paper because of the use of "random number generator" in identifying pseudotime dependent genes
+% % sd_thresh = 0.5; sig_thresh = 0.01;nboot = 1000; % default parameters (see functions for details). nboot can be changed to 500 or less
+% % PDGIfo = identify_pseudotime_dependent_genes(proData,smoothExprIfo,pseudotimeIfo,sd_thresh,sig_thresh,nboot);
+% % %   PDGIfo.PDG : a cell array, each cell contains the identified pseudotime-dependent genes for each path
+% % %   PDGIfo.allGenes: a cell array, each cell contains the genes with their calculated adjusted P-values and standard deviation
+% % 
+% % % (4) create "rolling wave" showing the temporal pattern of pseudotime dependent genes and identify gene clusters showing similar pattern
+% % optimalK = 8; % the number of desired gene clusters
+% % pathUsed = 1; % order the pseudotime-dependent genes based on their peak expression in the "pathUsed" branch. e.g. pathUsed = 1
+% % PDGIfo = plot_rolling_wave(PDGIfo,smoothExprIfo,proData,optimalK,pathUsed);
+% % % PDGIfo: update the PDG information (see functions for details).
+% % 
+% % % (5) identify key transcription factors responsible for cell fate decision
+% % % load TF information downloaded from AnimalTFDB 2.0 (http://bioinfo.life.hust.edu.cn/AnimalTFDB/)
+% % load TF_Ifo.mat
+% % TF = TF_Ifo.mouse.Symbol; % TF for mouse
+% % % TF = TF_Ifo.human.Symbol; % TF for mouse
+% % thresh_SD_TF = 0.5; thresh_FC_TF = 1; % default parameters (see functions for details):
+% % PDG_TFIfo = identify_keyTF(proData,PDGIfo.orderedPDG,smoothExprIfo,lineageIfo,clusterIfo,TF,thresh_SD_TF,thresh_FC_TF);
+% % % PDG_TFIfo.PDG_TFSig : key TFs that may be responsible for cell fate decisions
+% % % PDG_TFIfo.PDG_TF : all the TFs found in the pseudotime-dependent genes
+% % 
+% % % (6) create "rolling wave" showing the temporal pattern of key transcription factors
+% % show_TF_names = 1; % to show the TF names as Yticklabels or not
+% % plot_rolling_wave_TF(PDG_TFIfo,PDGIfo,optimalK,show_TF_names)
+% % 
+% % 
+% % %% save all the variables in the workspace
+% % save(fullfile('results','resultsLESdata.mat'));
+% % 
+% % 
