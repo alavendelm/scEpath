@@ -30,7 +30,7 @@ for i = 1:numCluster
     outCell{i} = idxCluster{i}(d > thresh);
 end
 
-filefolder = fullfile(folder,'_tempfiles');
+filefolder = fullfile(folder,'tempfiles');
 if ~exist(fullfile(pwd,filefolder),'dir')
     mkdir(filefolder)
 end
